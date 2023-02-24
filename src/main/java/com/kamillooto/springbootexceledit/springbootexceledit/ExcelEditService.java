@@ -1,15 +1,23 @@
 package com.kamillooto.springbootexceledit.springbootexceledit;
 
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+
+import static org.apache.poi.ss.util.CellUtil.getRow;
 
 @Service
 public class ExcelEditService {
@@ -47,5 +55,16 @@ public class ExcelEditService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void generatePdfFromXlsFile() throws Exception {
+        String excelFilePath = "C:\\Users\\medi\\Desktop\\kamil\\programowanie\\applications\\SpringbootExcelEdit\\spring-boot-excel-edit\\src\\main\\resources\\excelfile\\excel1.xlsx";
+        String pdfDirectoryToSave = "C:\\Users\\medi\\Desktop\\kamil\\programowanie\\applications\\SpringbootExcelEdit\\spring-boot-excel-edit\\src\\main\\resources\\excelfile\\";
+
+        com.grapecity.documents.excel.Workbook workbook = new com.grapecity.documents.excel.Workbook();
+        workbook.open(excelFilePath);
+
+        workbook.save(pdfDirectoryToSave + "pdf1.pdf");
+
     }
 }
