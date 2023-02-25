@@ -1,6 +1,8 @@
 package com.kamillooto.springbootexceledit.springbootexceledit;
 
 import com.grapecity.datavisualization.chart.typescript.Date;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -62,5 +64,42 @@ public class ExcelEditService {
 
         workbook.save(pdfDirectoryToSave + "pdf1.pdf");
 
+    }
+
+    public void editAndDownloadExcelReport(HttpServletResponse response) {
+
+
+        String excelTemplateFilePath = "src\\main\\resources\\excelfile\\excel.xlsx";
+        try {
+            FileInputStream fileInputStream = new FileInputStream(excelTemplateFilePath);
+
+            Workbook workbook = WorkbookFactory.create(fileInputStream);
+            Sheet sheet = workbook.getSheetAt(0);
+
+            int firstRowNumberToUpdateToFile = 5;
+
+            List<Product> products = productRepository.findAll();
+
+            for (Product product : products) {
+                Row dataRow = sheet.getRow(firstRowNumberToUpdateToFile++);
+                dataRow.getCell(0).setCellValue(product.getId());
+                dataRow.getCell(1).setCellValue(product.getProductName());
+                dataRow.getCell(2).setCellValue(product.getPrice());
+            }
+
+            fileInputStream.close();
+
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss");
+            LocalDateTime now = LocalDateTime.now();
+            String date = dtf.format(now);
+            System.out.println(date);
+
+            ServletOutputStream ops = response.getOutputStream();
+            workbook.write(ops);
+            ops.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
