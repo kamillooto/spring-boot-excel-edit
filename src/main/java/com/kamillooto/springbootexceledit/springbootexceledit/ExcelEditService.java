@@ -1,23 +1,15 @@
 package com.kamillooto.springbootexceledit.springbootexceledit;
 
-import com.itextpdf.text.BaseColor;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.Phrase;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
+import com.grapecity.datavisualization.chart.typescript.Date;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.awt.image.BufferedImage;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
-
-import static org.apache.poi.ss.util.CellUtil.getRow;
 
 @Service
 public class ExcelEditService {
@@ -27,10 +19,10 @@ public class ExcelEditService {
 
     public void updateExcelFile() {
 
-        String excelFilePath = "C:\\Users\\medi\\Desktop\\kamil\\programowanie\\applications\\SpringbootExcelEdit\\spring-boot-excel-edit\\src\\main\\resources\\excelfile\\excel.xlsx";
-
+        String excelTemplateFilePath = "src\\main\\resources\\excelfile\\excel.xlsx";
+        String excelFileToSavePath = "src\\main\\resources\\excelfile\\";
         try {
-            FileInputStream fileInputStream = new FileInputStream(excelFilePath);
+            FileInputStream fileInputStream = new FileInputStream(excelTemplateFilePath);
 
             Workbook workbook = WorkbookFactory.create(fileInputStream);
             Sheet sheet = workbook.getSheetAt(0);
@@ -48,7 +40,11 @@ public class ExcelEditService {
 
             fileInputStream.close();
 
-            FileOutputStream fileOutputStream = new FileOutputStream(excelFilePath);
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss");
+            LocalDateTime now = LocalDateTime.now();
+            String date = dtf.format(now);
+            System.out.println(date);
+            FileOutputStream fileOutputStream = new FileOutputStream(excelFileToSavePath + date + ".xlsx");
             workbook.write(fileOutputStream);
             fileOutputStream.close();
 
